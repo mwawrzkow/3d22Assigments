@@ -27,25 +27,29 @@ std::string readFile(const std::string &fileLoc)
 int main(int argc, char **argv)
 {
     srand(time(NULL));
-    int width = 1280, height = 720; // Minimum window size 
+
+    int width = 1280, height = 720; // Minimum window size
+				    //
     GLFWwindow *window = OpenGLInstance::InitWindow(width, height); // Creating instance 
 
-    OpenGLInstance::setClearColor(0.0, 0.0, 0.0, 1); // Clear color to black 
+    OpenGLInstance::setClearColor(0.0, 0.0, 0.0, 1); // Clear color to black
+						     //
     GLuint ShaderProgram = OpenGLInstance::CreateProgramAndLinkShaders(
         OpenGLInstance::CreateAndCompileShaders(
             readFile("./shaders/vertShader.vert").c_str(), // vert shader 
             readFile("./shaders/fragShader.frag").c_str())); // frag shade // lookup in CMakeLists
+							     //
     glUseProgram(ShaderProgram); // "Instaling Shaders"
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     float alpha = 1;
-    float vert[] = {
-            /*    cords                                                                                              |    RGBA color     |    TexturePos        */
-            -0.4f, -0.3f, 0.0f, randd(), randd(), randd(), alpha, 1.0f, 1.0f,
-            0.4f, -0.3f, 0.0f,  randd(), randd(), randd(), alpha, 0.0f, 1.0f,
-            -0.4f, 0.1f, 0.0f,  randd(), randd(), randd(), alpha, 0.0f, 0.0f,
-            0.4f, 0.1f, 0.0f,   randd(), randd(), randd(), alpha, 1.0f, 0.0f,
-            0.0f, 0.3f, 0.0f,   randd(), randd(), randd(), alpha, 1.0f, 0.0f,
+    float vert[] = {                                              // not used at the time
+            /*    cords         |    RGBA color                   |    TexturePos      */
+            -0.4f, -0.3f,   0.0f,  randd(), randd(), randd(), alpha, 1.0f, 1.0f,
+            0.4f,  -0.3f,   0.0f,  randd(), randd(), randd(), alpha, 0.0f, 1.0f,
+            -0.4f,  0.1f,   0.0f,  randd(), randd(), randd(), alpha, 0.0f, 0.0f,
+            0.4f,   0.1f,   0.0f,  randd(), randd(), randd(), alpha, 1.0f, 0.0f,
+            0.0f,   0.3f,   0.0f,  randd(), randd(), randd(), alpha, 1.0f, 0.0f,
             };
     unsigned int inc[] = {
             0, 1, 2,
@@ -53,7 +57,9 @@ int main(int argc, char **argv)
             2, 4, 3
             };
     VertexHandler vertH(true);
+    //setting all verts and incs
     vertH.setVertexHandler(vert, sizeof(vert), inc, sizeof(inc));
+
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -64,6 +70,7 @@ int main(int argc, char **argv)
         {
             for(int j = 0; j < 3; j++)
             {
+	      //update color, if color is lower than 0, then reset it to 1
                 vert[3+(i * 9) + j] -= 0.001;
                 if(vert[3+(i * 9)+j] < 0.0f)
                     vert[3+(i * 9) + j] = 1; 
